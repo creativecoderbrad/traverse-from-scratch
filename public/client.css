@@ -1,19 +1,20 @@
 
 
-/* home articles */
+/* home articles page */
 
 .article-container {
   margin-bottom: 20px;
 }
 
 
-/* add article */
+/* add article page */
 
 .add-article {
   margin: 0px auto;
   display: block;
   float: none;
 }
+
 
 .btn-primary {
   margin-top: 10px;

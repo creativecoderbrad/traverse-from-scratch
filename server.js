@@ -56,14 +56,22 @@ app.get('/', function(req, res){
   });
 });
 
+// get single article
+
+app.get('/article/:id', function(req, res){
+  Article.findById(req.params.id, function(err, article) {
+    res.render('article', {
+    article: article
+    });
+  });
+})
+
 // add article route
 app.get('/articles/add', function(req, res){
   res.render('add_article', {
     title: ' add articles'
   });
 });
-
-// add a submit post route
 
 // Add a submit post Route
 app.post('/articles/add', function(req, res) {

@@ -6,13 +6,13 @@ block content
   .container.add-article.col-sm-6
     h1 #{title}
     form(method='POST', action='/articles/add')
-      #form-group
+      .form-group
         label Title:
         input.form-control(name='title', type='text', required)
-      #form-group
+      .form-group
         label Author:
         input.form-control(name='author', type='text', required)
-      #form-group
+      .form-group
         label Body:
         textarea.form-control(name='body', required)
 
