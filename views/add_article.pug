@@ -2,4 +2,19 @@
 extends layout
 
 block content
-  h1 #{title}
+  
+  .container.add-article.col-sm-6
+    h1 #{title}
+    form(method='POST', action='/articles/add')
+      #form-group
+        label Title:
+        input.form-control(name='title', type='text', required)
+      #form-group
+        label Author:
+        input.form-control(name='author', type='text', required)
+      #form-group
+        label Body:
+        textarea.form-control(name='body', required)
+
+        
+      input.btn.btn-primary(type='submit', value='Submit')           

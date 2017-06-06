@@ -1,10 +1,10 @@
 
 
-let mongoose = require('mongoose');
+var mongoose = require('mongoose');
 
 // Article schema
 
-let articleSchema = mongoose.Schema({
+var articleSchema = mongoose.Schema({
 
   title: {
     type: String,
@@ -21,4 +21,4 @@ let articleSchema = mongoose.Schema({
   }
 })
 
-let Article = module.exports = mongoose.model('Article', articleSchema);
+var Article = module.exports = mongoose.model('Article', articleSchema);
