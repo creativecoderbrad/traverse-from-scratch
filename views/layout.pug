@@ -1,13 +1,34 @@
-
 doctype html
 
 html
   head
-  title my articles
-
+    title mean from scratch
+    link(rel='stylesheet' href='/bower_components/bootstrap/dist/css/bootstrap.css')
+    link(rel='stylesheet' href='/client.css')
   body
-    block content
-    br
-    hr
-    footer
-      p copyright &copy; 2017
+    
+    nav.navbar.navbar-inverse.navbar 
+      .container
+        .navbar-header
+          button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#navbar', aria-expanded='false', aria-controls='navbar')
+            span.sr-only Toggle navigation
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+          a.navbar-brand(href='/') news articles
+        #navbar.collapse.navbar-collapse
+          ul.nav.navbar-nav
+            li
+              a(href='/') Home
+            li
+              a(href='/articles/add') add article 
+    
+    .container
+        
+      block content
+        br
+        hr
+        footer
+          p copyright &copy; 2017  
+    script(src='/bower_components/jquery/dist/jquery.js')
+    script(src='/bower_components/bootstrap/dist/js/bootstrap.js')
