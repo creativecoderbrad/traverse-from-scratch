@@ -7,6 +7,12 @@
 }
 
 
+/* single article page */
+
+.delete-article {
+margin-left: 10px;
+}
+
 /* add article page */
 
 .add-article {
