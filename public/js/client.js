@@ -6,12 +6,11 @@ $(document).ready(function() {
     const id = $target.attr('data-id');
 
     $.ajax({
-      type: 'DELETE',
-      url: '/article/' +id,
+      type: 'DELETE', // delete request
+      url: '/article/' +id, // where the request goes
       success: function(response) {
         alert('deleting article post');
         window.location.href = '/';
-
       },
       failure: function(err) {
         console.log(err)

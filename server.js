@@ -5,6 +5,10 @@ const pug = require('pug');
 const path = require('path');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const expressValidator = require('express-validator');
+const flash = require('connect-flash');
+const session = require('express-session');
+
 
 mongoose.connect('mongodb://localhost/nodekb');
 var db = mongoose.connection;
@@ -41,6 +45,39 @@ app.use(bodyParser.json())
 // set public folder
 app.use(express.static(path.join(__dirname, 'public')));
 
+// express session middleware
+app.use(session({
+  secret: 'keyboard cat',
+  resave: true,
+  saveUninitialized: true
+}));
+
+// Express Messages Middleware
+app.use(require('connect-flash')());
+app.use(function (req, res, next) {
+  res.locals.messages = require('express-messages')(req, res);
+  next();
+});
+
+// Express Validator Middleware
+app.use(expressValidator({
+  errorFormatter: function(param, msg, value) {
+      var namespace = param.split('.')
+      , root    = namespace.shift()
+      , formParam = root;
+
+    while(namespace.length) {
+      formParam += '[' + namespace.shift() + ']';
+    }
+    return {
+      param : formParam,
+      msg   : msg,
+      value : value
+    };
+  }
+}));
+
+
 // home route
 app.get('/', function(req, res){
   Article.find({}, function(err, articles){
@@ -55,6 +92,7 @@ app.get('/', function(req, res){
     }
   });
 });
+
 
 // get single article
 app.get('/article/:id', function(req, res){
@@ -74,20 +112,38 @@ app.get('/articles/add', function(req, res){
 
 // Add a submit post Route
 app.post('/articles/add', function(req, res) {
-  var article = new Article();
-  //retrieve our json
-  article.title = req.body.title;
-  article.author = req.body.author;
-  article.body = req.body.body;
 
-  article.save(function(err){
-    if (err) {
-    console.log(err)
-    }
-    else {
-    res.redirect('/');
-    }
-  })
+  req.checkBody('title', 'Title is required').notEmpty();
+  req.checkBody('author', 'Author is required').notEmpty();
+  req.checkBody('body', 'Body is required').notEmpty();
+
+  // get errors
+  var errors =  req.validationErrors();
+
+  if(errors) {
+    res.render('add_article', {
+      title: 'Add article',
+      errors: errors
+    })
+  }
+  else {
+    var article = new Article();
+    //retrieve our json
+    article.title = req.body.title;
+    article.author = req.body.author;
+    article.body = req.body.body;
+
+    article.save(function(err){
+      if (err) {
+        console.log(err)
+      }
+      else {
+        req.flash('success', 'Article added');
+        res.redirect('/');
+      }
+    })
+  }
+
 });
 
 // edit form
@@ -136,7 +192,20 @@ app.delete('/article/:id', function(req, res) {
 });
 
 
+
+
+function time (val) {
+  var time = new Date();
+  var hour = time.getHours();
+  var min  = time.getMinutes();
+  var sec  = time.getSeconds();
+
+  var fulltime = hour + ':' + min + ':' + sec
+  return fulltime;
+}
+
+
 // start our server
 app.listen(3000, function() {
-  console.log('running server on port 3000');
+  console.log('started server on port 3000 at', time());
 });
