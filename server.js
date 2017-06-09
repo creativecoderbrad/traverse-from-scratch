@@ -1,5 +1,4 @@
 
-
 const express = require('express');
 const pug = require('pug');
 const path = require('path');
@@ -29,7 +28,6 @@ const app = express();
 
 
 // bring in our schema models
-
 var Article = require('./models/article');
 
 // load our view engine
@@ -93,106 +91,13 @@ app.get('/', function(req, res){
   });
 });
 
+// route files
 
-// get single article
-app.get('/article/:id', function(req, res){
-  Article.findById(req.params.id, function(err, article) {
-    res.render('article', {
-    article: article
-    });
-  });
-})
-
-// add article route
-app.get('/articles/add', function(req, res){
-  res.render('add_article', {
-    title: ' add articles'
-  });
-});
-
-// Add a submit post Route
-app.post('/articles/add', function(req, res) {
-
-  req.checkBody('title', 'Title is required').notEmpty();
-  req.checkBody('author', 'Author is required').notEmpty();
-  req.checkBody('body', 'Body is required').notEmpty();
-
-  // get errors
-  var errors =  req.validationErrors();
-
-  if(errors) {
-    res.render('add_article', {
-      title: 'Add article',
-      errors: errors
-    })
-  }
-  else {
-    var article = new Article();
-    //retrieve our json
-    article.title = req.body.title;
-    article.author = req.body.author;
-    article.body = req.body.body;
-
-    article.save(function(err){
-      if (err) {
-        console.log(err)
-      }
-      else {
-        req.flash('success', 'Article added');
-        res.redirect('/');
-      }
-    })
-  }
-
-});
-
-// edit form
-app.get('/article/edit/:id', function(req, res){
-  Article.findById(req.params.id, function(err, article) {
-    res.render('edit_article', {
-      title: 'Edit article',
-      article: article
-    });
-  });
-})
-
-// update submit route
-app.post('/articles/edit/:id', function(req, res) {
-  let article = {};
-  //retrieve our json
-  article.title = req.body.title;
-  article.author = req.body.author;
-  article.body = req.body.body;
-
-  let query = { _id:req.params.id}
-
-  Article.update(query, article, function(err){
-    if (err) {
-    console.log(err)
-    }
-    else {
-    res.redirect('/');
-    }
-  })
-});
-
-// delete article request
-
-app.delete('/article/:id', function(req, res) {
-
-  let query = {_id:req.params.id}
-
-  Article.remove(query, function(err){
-    if (err) {
-    console.log(err)
-    }
-    res.send('success');
-  });
-
-});
+var articles = require('./routes/articles');
+app.use('/articles', articles);
 
 
-
+// time of server start
 
 function time (val) {
   var time = new Date();

@@ -7,7 +7,7 @@ $(document).ready(function() {
 
     $.ajax({
       type: 'DELETE', // delete request
-      url: '/article/' +id, // where the request goes
+      url: '/articles/' +id, // where the request goes
       success: function(response) {
         alert('deleting article post');
         window.location.href = '/';
