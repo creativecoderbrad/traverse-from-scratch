@@ -94,7 +94,10 @@ app.get('/', function(req, res){
 // route files
 
 var articles = require('./routes/articles');
+var users = require('./routes/users');
+
 app.use('/articles', articles);
+app.use('/users', users);
 
 
 // time of server start
