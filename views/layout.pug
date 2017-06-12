@@ -23,10 +23,14 @@ html
             li
               a(href='/articles/add') submit a question 
           ul.nav.navbar-nav.navbar-right
-            li
-              a(href='/users/register') register
-            li
-              a(href='/users/login') login
+            if user
+              li 
+              a(href='/users/logout') logout
+            else 
+              li
+                a(href='/users/register') register
+              li
+                a(href='/users/login') login
       
     .container
       != messages('message', locals)
