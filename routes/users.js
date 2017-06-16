@@ -2,7 +2,6 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
-
 const passport = require('passport');
 
 // bring in our user schema model
@@ -74,17 +73,14 @@ router.get('/login', function(req, res){
   res.render('login');
 })
 
-// login process
-
+// Login Process
 router.post('/login', function(req, res, next){
   passport.authenticate('local', {
-    // flash messages
-    successRedirect: '/',
-    failureRedirect: '/users/login',
+    successRedirect:'/',
+    failureRedirect:'/users/login',
     failureFlash: true
   })(req, res, next);
 });
-
 
 module.exports = router;
 

@@ -76,15 +76,14 @@ app.use(expressValidator({
   }
 }));
 
-// passport config
-require('./config/passport') (passport);
-// passport middleware
+// Passport Config
+require('./config/passport')(passport);
+// Passport Middleware
 app.use(passport.initialize());
 app.use(passport.session());
 
-// all urls = global user var 
 app.get('*', function(req, res, next){
-  res.locals.user = res.user || null;
+  res.locals.user = req.user || null;
   next();
 });
 

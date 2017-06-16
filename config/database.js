@@ -1,5 +1,5 @@
 
 module.exports = {
-    database: 'mongodb://localhost:27017/nodekb',
-    secret: 'your secret'
+  database:'mongodb://localhost:27017/nodekb',
+  secret: 'yoursecret'
 }
