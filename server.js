@@ -10,6 +10,7 @@ const session = require('express-session');
 const passport = require('passport');
 const config = require('./config/database');
 
+
 mongoose.connect(config.database);
 var db = mongoose.connection;
 
@@ -30,6 +31,7 @@ const app = express();
 
 // bring in our schema models
 var Article = require('./models/article');
+var User = require('./models/user');
 
 // load our view engine
 app.set('views', path.join(__dirname, 'views'));
@@ -91,10 +93,11 @@ app.get('*', function(req, res, next){
 
 // home route
 app.get('/', function(req, res){
-  Article.find({}, function(err, articles){
+  Article.find({}, function(err, articles ){
     if (err) {
       console.log(err);
     }
+    // if no error
     else {
       res.render('index', {
         title: 'articles',

@@ -5,10 +5,11 @@ const router = express.Router();
 
 // bring in our schema models
 var Article = require('../models/article');
+var User = require('../models/user');
 
 
 // add article route
-router.get('/add', function(req, res){
+router.get('/add', ensureAuthenticated, function(req, res){
   res.render('add_article', {
     title: ' add articles'
   });
@@ -18,7 +19,6 @@ router.get('/add', function(req, res){
 router.post('/add', function(req, res) {
 
   req.checkBody('title', 'Title is required').notEmpty();
-  req.checkBody('author', 'Author is required').notEmpty();
   req.checkBody('body', 'Body is required').notEmpty();
 
   // get errors
@@ -34,7 +34,8 @@ router.post('/add', function(req, res) {
     var article = new Article();
     //retrieve our json
     article.title = req.body.title;
-    article.author = req.body.author;
+    // gets the authors id object who submits
+    article.author = req.user._id;
     article.body = req.body.body;
 
     article.save(function(err){
@@ -50,9 +51,14 @@ router.post('/add', function(req, res) {
 
 });
 
-// edit form
-router.get('/edit/:id', function(req, res){
+// load edit form
+router.get('/edit/:id', ensureAuthenticated, function(req, res){
   Article.findById(req.params.id, function(err, article) {
+    //
+    if (article.author != req.user._id) {
+      req.flash('danger', 'not authorized');
+      res.redirect('/');
+    }
     res.render('edit_article', {
       title: 'Edit article',
       article: article
@@ -65,7 +71,6 @@ router.post('/edit/:id', function(req, res) {
   var article = {};
   //retrieve our json
   article.title = req.body.title;
-  article.author = req.body.author;
   article.body = req.body.body;
 
   var query = { _id:req.params.id}
@@ -85,24 +90,52 @@ router.post('/edit/:id', function(req, res) {
 
 router.delete('/:id', function(req, res) {
 
+  if (!req.user._id) {
+    res.status(401).send();
+  }
+
   var query = {_id:req.params.id}
 
-  Article.remove(query, function(err){
-    if (err) {
-    console.log(err)
+  Article.findById(req.params.id, function(err, article) {
+    if(article.author != req.user._id) {
+      res.status(401).send();
     }
-    res.send('success');
+    else {
+      Article.remove(query, function(err){
+        if (err) {
+        console.log(err)
+        }
+        res.send('success');
+      });
+    }
   });
 });
 
 // get single article
 router.get('/:id', function(req, res){
   Article.findById(req.params.id, function(err, article) {
-    res.render('article', {
-    article: article
+
+    User.findById(article.author, function(err, user){
+      res.render('article', {
+      article: article,
+      author: user.name
+      });
     });
+
   });
 })
+
+// access control
+
+function ensureAuthenticated(req, res, next) {
+  if (req.isAuthenticated()){
+    return next();
+  }
+  else {
+    req.flash('danger', 'please login');
+    res.redirect('/users/login');
+  }
+}
 
 
 module.exports = router;

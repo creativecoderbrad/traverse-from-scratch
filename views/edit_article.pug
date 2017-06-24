@@ -8,9 +8,7 @@ block content
       .form-group
         label Title:
         input.form-control(name='title', type='text', value=article.title, required)
-      .form-group
-        label Author:
-        input.form-control(name='author', type='text',value=article.author , required)
+  
       .form-group
         label Body:
         textarea.form-control(name='body', required)= article.body

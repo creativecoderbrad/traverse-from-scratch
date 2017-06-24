@@ -6,7 +6,8 @@ block content
   ul.list-group
     each article, i in articles
        div.article-container 
-          li.list-group-item= article.title + ' by ' + article.author 
+          li.list-group-item #{article.title} 
+            p created by: #{article.author}
             p= article.body
             a(href="/articles/" + article._id)= "view this story"
          
